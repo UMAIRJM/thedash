@@ -8,11 +8,12 @@ public class characterMovement : MonoBehaviour
     public Rigidbody2D rb;
     
     public float playerSpeed = 10f;
-    public float jumpForce = 8f;
+    public float jumpForce = 10f;
     private bool isJumping = false;
     private float jumpStartRotation;
     private float jumpTime = 1f; // Time in seconds to complete one spin
     private float jumpTimer;
+    public static bool playerConstantMovementFlag = true;
 
 
     void Start()
@@ -20,6 +21,7 @@ public class characterMovement : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         rb.constraints = RigidbodyConstraints2D.FreezeRotation;
         FollowPlayerWithCamera();
+        jumpStartRotation = transform.rotation.eulerAngles.z;
 
     }
 
@@ -35,19 +37,23 @@ public class characterMovement : MonoBehaviour
     }
     private void HandleJump()
     {
-        if (Input.GetMouseButton(0) && Mathf.Abs(rb.velocity.y) < 0.01f)
+        if (Input.GetMouseButton(0) && Mathf.Abs(rb.velocity.y) < 0.1f)
         {
             rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
             isJumping = true;
-            jumpStartRotation = transform.rotation.eulerAngles.z;
+            
             jumpTimer = 0f;
             rb.constraints = RigidbodyConstraints2D.None;
         }
     }
     public void playerConstantMovement()
     {
-        Vector2 veocity = new Vector2(playerSpeed, rb.velocity.y);
-        rb.velocity = veocity;
+        if (playerConstantMovementFlag)
+        {
+            Vector2 veocity = new Vector2(playerSpeed, rb.velocity.y);
+            rb.velocity = veocity;
+        }
+       
     }
 
 
@@ -70,7 +76,7 @@ public class characterMovement : MonoBehaviour
             transform.rotation = Quaternion.Euler(0, 0, newRotation);
 
             // Check if the jump is complete and the character is back on the ground
-            if (Mathf.Abs(rb.velocity.y) < 0.09f)
+            if (Mathf.Abs(rb.velocity.y) < 0.1f)
             {
                 isJumping = false;
                 transform.rotation = Quaternion.Euler(0, 0, jumpStartRotation);
