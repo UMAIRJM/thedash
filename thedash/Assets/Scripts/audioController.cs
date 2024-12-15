@@ -19,20 +19,19 @@ public class audioController : MonoBehaviour
         audio = GetComponent<AudioSource>();
         audio.clip = backgroundMusic;
         muted = mute == 0 ? false : true;
+        muteUmuteAudio();
+
+
+    }
+    public void muteUmuteAudio()
+    {
         if (muted)
         {
             audio.Stop();
         }
-        
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if (muted)
+        else
         {
-            audio.Stop ();
+            audio.Play();
         }
     }
 }

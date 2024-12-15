@@ -15,12 +15,14 @@ public class UIComtroller : MonoBehaviour
     public Sprite unmuteSprite;
     public Button mutueUnmuteButton;
     Image buttonImage;
+    audioController ac;
 
     void Start()
     {
         int muted = PlayerPrefs.GetInt("mute",0);
         score.text = ":   0";
-        highScore.text = ":   0";
+        highScore.text = ":   " + (PlayerPrefs.GetInt("score",0)).ToString();
+        ac = FindAnyObjectByType<audioController>();
         buttonImage = mutueUnmuteButton.GetComponent<Image>();
         if(muted == 0)
         {
@@ -49,6 +51,7 @@ public class UIComtroller : MonoBehaviour
    public void muteUnmuteSound()
     {
         int status = PlayerPrefs.GetInt("mute", 0);
+        print("status is : " + status);
         if(status == 0)
         {
             PlayerPrefs.SetInt("mute", 1);
@@ -62,5 +65,7 @@ public class UIComtroller : MonoBehaviour
             buttonImage.sprite = unmuteSprite;
 
         }
+        PlayerPrefs.Save();
+        ac.muteUmuteAudio();
     }
 }

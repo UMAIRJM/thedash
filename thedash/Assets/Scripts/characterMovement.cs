@@ -31,7 +31,7 @@ public class characterMovement : MonoBehaviour
         FollowPlayerWithCamera();
         playerConstantMovement();
         HandleJump();
-       UpdateRotation();
+        UpdateRotation();
 
 
     }
