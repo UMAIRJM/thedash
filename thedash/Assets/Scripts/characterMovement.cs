@@ -7,7 +7,7 @@ public class characterMovement : MonoBehaviour
     public Transform cameraTransform;
     public Rigidbody2D rb;
     
-    public float playerSpeed = 10f;
+    private float playerSpeed = 10f;
     public float jumpForce = 10f;
     private bool isJumping = false;
     private float jumpStartRotation;
