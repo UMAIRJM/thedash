@@ -11,7 +11,7 @@ public class characterControls : MonoBehaviour
     {
         if(collision.gameObject.tag == "spikes")
         {
-            int curerntScore = UIComtroller.playerScore;
+          /*  int curerntScore = UIComtroller.playerScore;
             int savedScore = PlayerPrefs.GetInt("score", 0);
             if(curerntScore > savedScore)
             {
@@ -21,7 +21,7 @@ public class characterControls : MonoBehaviour
             characterMovement.playerConstantMovementFlag = false;
             StartCoroutine(naviagteToMain());
             GameOverImage.SetActive(true);
-
+          */
 
         }
     }

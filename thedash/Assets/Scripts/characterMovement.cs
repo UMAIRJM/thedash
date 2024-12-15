@@ -14,6 +14,7 @@ public class characterMovement : MonoBehaviour
     private float jumpTime = 1f; // Time in seconds to complete one spin
     private float jumpTimer;
     public static bool playerConstantMovementFlag = true;
+    public int tempScore = 0;
 
 
     void Start()
@@ -22,6 +23,8 @@ public class characterMovement : MonoBehaviour
         rb.constraints = RigidbodyConstraints2D.FreezeRotation;
         FollowPlayerWithCamera();
         jumpStartRotation = transform.rotation.eulerAngles.z;
+        
+
 
     }
 
@@ -32,7 +35,11 @@ public class characterMovement : MonoBehaviour
         FollowPlayerWithCamera();
         HandleJump();
         UpdateRotation();
-
+        if((UIComtroller.playerScore - tempScore) >=200)
+        {
+            tempScore = UIComtroller.playerScore;
+            playerSpeed += 4f;
+        }
 
     }
     private void HandleJump()
