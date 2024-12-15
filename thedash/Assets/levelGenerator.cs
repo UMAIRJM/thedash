@@ -7,6 +7,7 @@ public class levelGenerator : MonoBehaviour
     public Transform character;
     public Transform level1;
     public Transform endpoint;
+    private float payload = 0;
     
     void Start()
     {
@@ -21,11 +22,13 @@ public class levelGenerator : MonoBehaviour
 
     void difference(float currentPosition,float endpointPosiotn)
     {
-        float diff = endpointPosiotn - currentPosition;
+        
+        float diff = (endpointPosiotn) - currentPosition;
         if (diff <= 0) {
+            payload += 171;
             Vector3 moveAmount = new Vector3(endpointPosiotn, 0, 0);
-            level1.position += moveAmount;
-            endpoint.position += moveAmount;
+            level1.position = moveAmount;
+           // endpoint.position += moveAmount;
 
         }
     }
