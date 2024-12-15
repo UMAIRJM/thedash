@@ -20,7 +20,7 @@ public class characterControls : MonoBehaviour
         if(collision.gameObject.tag == "spikes")
         {
             print("collided with spike");
-            characterMovement.playerConstantMovementFlag = false;
+        //    characterMovement.playerConstantMovementFlag = false;
         }
     }
 }

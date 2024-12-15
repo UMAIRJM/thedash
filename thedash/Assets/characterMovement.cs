@@ -31,13 +31,13 @@ public class characterMovement : MonoBehaviour
         FollowPlayerWithCamera();
         playerConstantMovement();
         HandleJump();
-        UpdateRotation();
+       UpdateRotation();
 
 
     }
     private void HandleJump()
     {
-        if (Input.GetMouseButton(0) && Mathf.Abs(rb.velocity.y) < 0.1f)
+        if (Input.GetMouseButton(0) && Mathf.Abs(rb.velocity.y) < 0.15f)
         {
             rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
             isJumping = true;
@@ -76,7 +76,7 @@ public class characterMovement : MonoBehaviour
             transform.rotation = Quaternion.Euler(0, 0, newRotation);
 
             // Check if the jump is complete and the character is back on the ground
-            if (Mathf.Abs(rb.velocity.y) < 0.1f)
+            if (Mathf.Abs(rb.velocity.y) < 0.19f)
             {
                 isJumping = false;
                 transform.rotation = Quaternion.Euler(0, 0, jumpStartRotation);
