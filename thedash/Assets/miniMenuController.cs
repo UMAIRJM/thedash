@@ -30,4 +30,13 @@ public class miniMenuController : MonoBehaviour
         UIComtroller.playerScore = 0;
         SceneManager.LoadScene("MainMenu");
     }
+
+    public void StartGame()
+    {
+        SceneManager.LoadScene("Game");
+    }
+    public void ResetHighScore()
+    {
+        PlayerPrefs.SetInt("score", 0);
+    }
 }

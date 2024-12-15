@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 578d0f672040c0541a58ae509751e0a1
+guid: ee4dfdb5921a5104e87fec2c860781b3
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -123,34 +123,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: pngtree-vector-game-menu-illustration-with-button-png-image_6038490_0
+      name: free-reset-icon-14436-thumb_0
       rect:
         serializedVersion: 2
-        x: 402
-        y: 1046
-        width: 398
-        height: 132
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: f7e2d6c31c11cbc4683b9fe9885ff98b
-      internalID: -1536802796
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: pngtree-vector-game-menu-illustration-with-button-png-image_6038490_1
-      rect:
-        serializedVersion: 2
-        x: 445
-        y: 551
-        width: 319
-        height: 77
+        x: 0
+        y: 58
+        width: 512
+        height: 454
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -158,8 +137,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 17c1c2f96cd6e9d46b15a12e99b49a76
-      internalID: 673920492
+      spriteID: e786957ffb415764e810f1330c9ac462
+      internalID: -1782537521
       vertices: []
       indices: 
       edges: []
@@ -175,8 +154,7 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      pngtree-vector-game-menu-illustration-with-button-png-image_6038490_0: -1536802796
-      pngtree-vector-game-menu-illustration-with-button-png-image_6038490_1: 673920492
+      free-reset-icon-14436-thumb_0: -1782537521
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

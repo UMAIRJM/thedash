@@ -29,6 +29,8 @@ public class characterControls : MonoBehaviour
     IEnumerator naviagteToMain()
     {
         yield return new WaitForSeconds(2);
+        UIComtroller.playerScore = 0;
+        characterMovement.playerConstantMovementFlag = true;
         SceneManager.LoadScene("MainMenu");
     }
 }
