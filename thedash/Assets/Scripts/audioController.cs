@@ -9,13 +9,16 @@ public class audioController : MonoBehaviour
 
     public AudioClip backgroundMusic;
 
+    int mute;
 
-    public static bool muted = false;
+    public static bool muted;
 
     void Start()
     {
+        mute = PlayerPrefs.GetInt("mute", 0);
         audio = GetComponent<AudioSource>();
         audio.clip = backgroundMusic;
+        muted = mute == 0 ? false : true;
         if (muted)
         {
             audio.Stop();
