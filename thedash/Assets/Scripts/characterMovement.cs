@@ -28,8 +28,8 @@ public class characterMovement : MonoBehaviour
     
     void Update()
     {
-        FollowPlayerWithCamera();
         playerConstantMovement();
+        FollowPlayerWithCamera();
         HandleJump();
         UpdateRotation();
 
@@ -48,10 +48,13 @@ public class characterMovement : MonoBehaviour
     }
     public void playerConstantMovement()
     {
-        if (playerConstantMovementFlag)
+        
+       if (playerConstantMovementFlag)
         {
-            Vector2 veocity = new Vector2(playerSpeed, rb.velocity.y);
-            rb.velocity = veocity;
+            print("I am inside player contant movement flag" + playerConstantMovementFlag);
+          //  Vector2 veocity = new Vector2(playerSpeed, rb.velocity.y);
+           // rb.velocity = veocity;
+            rb.velocity = new Vector2(playerSpeed, rb.velocity.y);
         }
        
     }
@@ -83,5 +86,13 @@ public class characterMovement : MonoBehaviour
                 rb.constraints = RigidbodyConstraints2D.FreezeRotation;
             }
         }
+    }
+
+    public void ResetCharacter()
+    {
+        rb.velocity = Vector2.zero;
+        isJumping = false;
+        transform.rotation = Quaternion.Euler(0, 0, jumpStartRotation);
+        rb.constraints = RigidbodyConstraints2D.FreezeRotation;
     }
 }

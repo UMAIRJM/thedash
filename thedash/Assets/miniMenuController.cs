@@ -6,7 +6,12 @@ using UnityEngine.SceneManagement;
 public class miniMenuController : MonoBehaviour
 {
     public GameObject miniMenu;
-    
+    private characterMovement characterMovementScript;
+
+    void Start()
+    {
+        characterMovementScript = FindObjectOfType<characterMovement>();
+    }
 
     public void pauseButtonController()
     {
@@ -33,7 +38,16 @@ public class miniMenuController : MonoBehaviour
 
     public void StartGame()
     {
+        characterMovement.playerConstantMovementFlag = true;
         SceneManager.LoadScene("Game");
+       
+    }
+
+
+    IEnumerator ResetCharacterAfterLoad()
+    {
+        yield return new WaitForSeconds(0.1f);
+        characterMovementScript.ResetCharacter();
     }
     public void ResetHighScore()
     {
