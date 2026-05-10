@@ -33,8 +33,10 @@ public class miniMenuController : MonoBehaviour
     public void navigatetoMainMenu()
     {
         
+
         characterMovement.playerConstantMovementFlag = true;
         UIComtroller.playerScore = 0;
+        Time.timeScale = 1f;
         SceneManager.LoadScene("MainMenu");
     }
 

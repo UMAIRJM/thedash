@@ -6,7 +6,7 @@ public class characterMovement : MonoBehaviour
 {
     public Transform cameraTransform;
     public Rigidbody2D rb;
-    
+
     private float playerSpeed = 10f;
     public float jumpForce = 10f;
     private bool isJumping = false;
@@ -23,16 +23,15 @@ public class characterMovement : MonoBehaviour
         rb.constraints = RigidbodyConstraints2D.FreezeRotation;
         FollowPlayerWithCamera();
         jumpStartRotation = transform.rotation.eulerAngles.z;
-        
+
 
 
     }
 
-    
+
     void Update()
     {
-        playerConstantMovement();
-        FollowPlayerWithCamera();
+ 
         HandleJump();
         UpdateRotation();
         if((UIComtroller.playerScore - tempScore) >=200)
@@ -42,20 +41,26 @@ public class characterMovement : MonoBehaviour
         }
 
     }
+
+    private void FixedUpdate()
+    {
+        playerConstantMovement();
+        FollowPlayerWithCamera();
+    }
     private void HandleJump()
     {
         if (Input.GetMouseButton(0) && Mathf.Abs(rb.velocity.y) < 0.15f)
         {
             rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
             isJumping = true;
-            
+
             jumpTimer = 0f;
             rb.constraints = RigidbodyConstraints2D.None;
         }
     }
     public void playerConstantMovement()
     {
-        
+
        if (playerConstantMovementFlag)
         {
             print("I am inside player contant movement flag" + playerConstantMovementFlag);
@@ -63,7 +68,7 @@ public class characterMovement : MonoBehaviour
            // rb.velocity = veocity;
             rb.velocity = new Vector2(playerSpeed, rb.velocity.y);
         }
-       
+
     }
 
 
