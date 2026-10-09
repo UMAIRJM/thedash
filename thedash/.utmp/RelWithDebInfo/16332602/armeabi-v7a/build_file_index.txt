@@ -1,2 +1,0 @@
-D:\Umair\Unity Projects\thedash\thedash\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\src\main\cpp\CMakeLists.txt
-D:\Umair\Unity Projects\thedash\thedash\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\src\main\cpp\FramePacing\CMakeLists.txt

@@ -75,3 +75,6 @@ crashlytics-build.properties
 *.apk
 *.aab
 *.slnx
+
+# Unity native build cache
+.utmp/
