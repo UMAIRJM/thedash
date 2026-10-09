@@ -14,9 +14,9 @@ namespace TheDash
         public static Game I { get; private set; }
 
         public const string SceneName = "TheDash";
-        // TODO: paste the public URL of your hosted privacy policy (see PlayStore/privacy-policy.html).
+        // Hosted privacy policy (repo: github.com/UMAIRJM/thedash-policy).
         // The "Privacy Policy" button in Settings stays hidden until this is set.
-        public const string PrivacyPolicyUrl = "";
+        public const string PrivacyPolicyUrl = "https://umairjm.github.io/thedash-policy/";
         const float ZoneLength = World.ZoneLength, ZoneBlend = 70f, MilestoneEvery = 250f;
         const int ReviveCost = 150;
 
