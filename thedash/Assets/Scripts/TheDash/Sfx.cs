@@ -49,6 +49,7 @@ namespace TheDash
 
         void Update()
         {
+            music.pitch = Mathf.MoveTowards(music.pitch, pitchTarget, Time.unscaledDeltaTime * 0.1f);
             music.volume = Mathf.MoveTowards(music.volume, SaveData.Music ? musicTarget : 0f, Time.unscaledDeltaTime * 0.8f);
             if (music.volume <= 0.001f && music.isPlaying && !SaveData.Music) music.Pause();
         }
@@ -57,6 +58,11 @@ namespace TheDash
         {
             if (SaveData.Music && music.clip != null && !music.isPlaying) music.Play();
         }
+
+        float pitchTarget = 1f;
+
+        /// <summary>Music speeds up slightly with each zone boost.</summary>
+        public void SetMusicPitch(float pitch) => pitchTarget = pitch;
 
         /// <summary>Music ducks a little in menus, full volume while running.</summary>
         public void SetMusicIntensity(bool running) => musicTarget = running ? 0.6f : 0.35f;

@@ -17,7 +17,7 @@ namespace TheDash
         // TODO: paste the public URL of your hosted privacy policy (see PlayStore/privacy-policy.html).
         // The "Privacy Policy" button in Settings stays hidden until this is set.
         public const string PrivacyPolicyUrl = "";
-        const float ZoneLength = 500f, ZoneBlend = 70f, MilestoneEvery = 250f;
+        const float ZoneLength = World.ZoneLength, ZoneBlend = 70f, MilestoneEvery = 250f;
         const int ReviveCost = 150;
 
         enum State { Menu, Countdown, Playing, Paused, Dead, GameOver }
@@ -33,7 +33,7 @@ namespace TheDash
         float countdown, deadTimer, reviveTimer;
         bool revived, reviveOffered, doubled, newBestAnnounced, dailyShownThisSession;
         int coinsRun, perfectArcs, lastZone, lastMilestone, bestAtStart, lastReportedMeters, powerupsRun;
-        float lastThemeKey = -1;
+        float lastThemeKey = -1, speedFx, streakTimer;
         readonly HashSet<int> uiFingers = new HashSet<int>();
 
         // ------------------------------------------------------------------ bootstrap
@@ -101,6 +101,7 @@ namespace TheDash
             ApplyTheme(0, true);
             ui.ShowMenu();
             Sfx.I.SetMusicIntensity(false);
+            Sfx.I.SetMusicPitch(1f);
             AdsManager.Instance?.SetBannerVisible(true);
 
             if (!dailyShownThisSession && SaveData.DailyAvailable)
@@ -134,6 +135,8 @@ namespace TheDash
             Missions.BeginRun();
 
             ui.ShowHud(bestAtStart);
+            speedFx = 0f;
+            Sfx.I.SetMusicPitch(1f);
             AdsManager.Instance?.SetBannerVisible(false);
             Sfx.I.SetMusicIntensity(true);
             Sfx.I.ApplySettings();
@@ -238,7 +241,11 @@ namespace TheDash
             if (state != State.Playing) return; // died this frame
 
             int meters = Mathf.Max(0, Mathf.FloorToInt(player.pos.x));
-            ui.UpdateHud(meters, coinsRun, player.hasShield, world.MagnetTime > 0 ? world.MagnetTime / 10f : 0f);
+            float mult = World.SpeedMultiplierAt(player.pos.x);
+            ui.UpdateHud(meters, coinsRun, player.hasShield, world.MagnetTime > 0 ? world.MagnetTime / 10f : 0f, mult);
+            rig.SetSpeedZoom(mult);
+            Sfx.I.SetMusicPitch(1f + 0.025f * World.BoostLevel(player.pos.x));
+            SpeedLines(dt, speed, mult);
 
             int zone = Mathf.FloorToInt(player.pos.x / ZoneLength);
             if (zone != lastZone)
@@ -247,6 +254,16 @@ namespace TheDash
                 var t = Theme.All[zone % Theme.All.Length];
                 ui.Toast($"ZONE {zone + 1}  •  {t.name}", t.groundEdge, true);
                 Sfx.I.Play("milestone");
+                if (zone <= World.MaxBoosts)
+                {
+                    float next = World.SpeedMultiplierAt(zone * ZoneLength + World.BoostRamp);
+                    ui.Toast($"SPEED UP!  x{next:0.00}", UIColors.Cyan);
+                    ui.PunchSpeed();
+                    speedFx = 1f;
+                    rig.BoostPulse();
+                    rig.Shake(0.12f);
+                    Sfx.I.Play("power", 1.25f);
+                }
             }
             else if (meters >= lastMilestone + MilestoneEvery)
             {
@@ -270,6 +287,22 @@ namespace TheDash
                 Missions.Report(MissionType.RunDistance, meters);
             }
             ApplyTheme(player.pos.x, false);
+        }
+
+        /// <summary>Speed lines: a burst on every boost, plus a light constant stream once you're going fast.</summary>
+        void SpeedLines(float dt, float speed, float mult)
+        {
+            speedFx = Mathf.MoveTowards(speedFx, 0f, dt / 2.5f);
+            float rate = speedFx * 45f + Mathf.Max(0f, mult - 1.2f) * 12f;
+            if (rate <= 0.01f) return;
+            streakTimer -= dt;
+            while (streakTimer <= 0f)
+            {
+                streakTimer += 1f / rate;
+                float h = rig.cam.orthographicSize;
+                var at = new Vector2(rig.Right + Random.Range(0f, 2f), rig.cam.transform.position.y + Random.Range(-h * 0.85f, h * 0.9f));
+                fx.Streak(at, Random.Range(1.5f, 4f), -speed * Random.Range(2.5f, 3.5f), 0.18f + speedFx * 0.3f);
+            }
         }
 
         void TickDead(float dt)

@@ -27,7 +27,8 @@ namespace TheDash
 
         // hud
         GameObject hud;
-        Text hudDistance, hudBest, hudCoins, countdown, tutorial;
+        Text hudDistance, hudBest, hudCoins, hudSpeed, countdown, tutorial;
+        float shownSpeed = -1;
         RectTransform hudCoinsPill;
         GameObject shieldInd, magnetInd;
         Image magnetFill;
@@ -202,6 +203,8 @@ namespace TheDash
             hudDistance.Glow(new Color(0.1f, 0.02f, 0.25f, 0.7f), 4f);
             hudBest = UIKit.Label(hud.transform, "BEST 0 m", 40, UIColors.TextSoft, TextAnchor.UpperLeft);
             hudBest.rectTransform.At(0, 1, 50, -134, 600, 50);
+            hudSpeed = UIKit.Label(hud.transform, "SPEED x1.00", 40, UIColors.Cyan, TextAnchor.UpperLeft);
+            hudSpeed.rectTransform.At(0, 1, 50, -182, 600, 50);
 
             hudCoins = UIKit.Pill(hud.transform, Art.Coin, Color.white, "0", 250, out hudCoinsPill);
             hudCoinsPill.At(0.5f, 1, 0, -30, 250, 92);
@@ -248,8 +251,14 @@ namespace TheDash
             countdown.text = "";
         }
 
-        public void UpdateHud(int distance, int coins, bool shield, float magnet01)
+        public void UpdateHud(int distance, int coins, bool shield, float magnet01, float speedMultiplier)
         {
+            float rounded = Mathf.Round(speedMultiplier * 100f) / 100f;
+            if (!Mathf.Approximately(rounded, shownSpeed))
+            {
+                shownSpeed = rounded;
+                hudSpeed.text = $"SPEED x{rounded:0.00}";
+            }
             hudDistance.text = distance + " m";
             hudCoins.text = coins.ToString();
             shieldInd.SetActive(shield);
@@ -260,6 +269,12 @@ namespace TheDash
         public void PunchCoins()
         {
             Tweener.Run(hudCoinsPill, 0.25f, k => hudCoinsPill.localScale = Vector3.one * (1f + 0.18f * Mathf.Sin(k * Mathf.PI)));
+        }
+
+        public void PunchSpeed()
+        {
+            var rt = hudSpeed.rectTransform;
+            Tweener.Run(rt, 0.6f, k => rt.localScale = Vector3.one * (1f + 0.5f * Mathf.Sin(k * Mathf.PI)));
         }
 
         public void HideTutorial()

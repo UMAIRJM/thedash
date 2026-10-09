@@ -11,8 +11,21 @@ namespace TheDash
     public class World : MonoBehaviour
     {
         // ------------------------------------------------------------ tuning
-        public const float StartSpeed = 9f, MaxSpeed = 16.5f;
-        public static float SpeedAt(float distance) => StartSpeed + (MaxSpeed - StartSpeed) * (1f - Mathf.Exp(-distance / 1800f));
+        // Speed steps up at the start of every new zone (+12% each, eased in over ~30 m) so players feel it.
+        public const float StartSpeed = 9f, ZoneLength = 500f, BoostPerZone = 0.12f, BoostRamp = 30f;
+        public const int MaxBoosts = 7;
+
+        /// <summary>How many zone boosts are active at this distance (fractional while a boost ramps in).</summary>
+        public static float BoostLevel(float distance)
+        {
+            if (distance < ZoneLength) return 0f;
+            int zone = Mathf.FloorToInt(distance / ZoneLength);
+            float t = Mathf.SmoothStep(0f, 1f, (distance - zone * ZoneLength) / BoostRamp);
+            return Mathf.Min(MaxBoosts, zone - 1 + t);
+        }
+
+        public static float SpeedMultiplierAt(float distance) => 1f + BoostPerZone * BoostLevel(distance);
+        public static float SpeedAt(float distance) => StartSpeed * SpeedMultiplierAt(distance);
         public static float JumpLengthAt(float distance) => SpeedAt(distance) * Player.AirTime;
         public static float DifficultyAt(float distance) => Mathf.Clamp01(distance / 2500f);
 

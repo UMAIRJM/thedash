@@ -10,9 +10,9 @@ namespace TheDash
         {
             public SpriteRenderer sr;
             public Vector2 v;
-            public float life, maxLife, size, gravity, spin;
+            public float life, maxLife, size, gravity, spin, stretch = 1f;
             public Color color;
-            public bool shrink;
+            public bool shrink, fixedSize;
         }
 
         readonly List<P> live = new List<P>();
@@ -31,6 +31,8 @@ namespace TheDash
             p.sr.sprite = sprite;
             p.sr.sortingOrder = order;
             p.sr.transform.rotation = Quaternion.identity;
+            p.stretch = 1f;
+            p.fixedSize = false;
             live.Add(p);
             return p;
         }
@@ -100,6 +102,22 @@ namespace TheDash
             p.sr.transform.rotation = rot;
         }
 
+        /// <summary>A thin horizontal speed line flying past the camera.</summary>
+        public void Streak(Vector2 at, float length, float vx, float alpha)
+        {
+            var p = Get(Art.Pixel, 30);
+            p.v = new Vector2(vx, 0);
+            p.life = p.maxLife = Random.Range(0.25f, 0.45f);
+            p.size = Random.Range(0.035f, 0.06f);
+            p.stretch = length / p.size;
+            p.gravity = 0;
+            p.spin = 0;
+            p.color = new Color(1, 1, 1, alpha);
+            p.shrink = false;
+            p.fixedSize = true;
+            p.sr.transform.position = new Vector3(at.x, at.y, 0);
+        }
+
         public void Clear()
         {
             foreach (var p in live)
@@ -129,8 +147,8 @@ namespace TheDash
                 var tr = p.sr.transform;
                 tr.position += (Vector3)(p.v * dt);
                 if (p.spin != 0) tr.Rotate(0, 0, p.spin * dt);
-                float s = p.shrink ? p.size * t : p.size * (1.6f - t * 0.6f);
-                tr.localScale = new Vector3(s, s, 1);
+                float s = p.fixedSize ? p.size : p.shrink ? p.size * t : p.size * (1.6f - t * 0.6f);
+                tr.localScale = new Vector3(s * p.stretch, s, 1);
                 var c = p.color;
                 c.a *= p.shrink ? Mathf.Min(1f, t * 1.5f) : t;
                 p.sr.color = c;

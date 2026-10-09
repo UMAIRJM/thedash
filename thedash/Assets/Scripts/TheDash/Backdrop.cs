@@ -119,7 +119,8 @@ namespace TheDash
     public class CameraRig : MonoBehaviour
     {
         public Camera cam;
-        float shake, y = 3.2f;
+        float shake, y = 3.2f, zoom, zoomPulse;
+        const float BaseSize = 6f;
         public const float BaseY = 3.2f;
         public const float PlayerScreenX = 0.27f;   // player sits at 27% of screen width
 
@@ -142,14 +143,22 @@ namespace TheDash
 
         public void Shake(float amount) => shake = Mathf.Max(shake, amount);
 
+        /// <summary>Zoom out slightly as speed rises (more look-ahead), plus a short pulse on each boost.</summary>
+        public void SetSpeedZoom(float multiplier) => zoom = (multiplier - 1f) * 0.6f;
+        public void BoostPulse() => zoomPulse = 0.45f;
+
         public void Snap(float playerX)
         {
             y = BaseY;
+            zoom = zoomPulse = 0f;
+            cam.orthographicSize = BaseSize;
             Follow(playerX, 0.5f, 0f);
         }
 
         public void Follow(float playerX, float playerY, float dt)
         {
+            zoomPulse = Mathf.MoveTowards(zoomPulse, 0f, dt * 0.35f);
+            cam.orthographicSize = Mathf.Lerp(cam.orthographicSize, BaseSize + zoom + zoomPulse, dt > 0 ? 1f - Mathf.Exp(-3f * dt) : 1f);
             float targetY = BaseY + Mathf.Max(0f, playerY - 2.2f) * 0.35f;
             y = dt > 0 ? Mathf.Lerp(y, targetY, 1f - Mathf.Exp(-4f * dt)) : targetY;
             float x = playerX + ViewWidth * (0.5f - PlayerScreenX);
