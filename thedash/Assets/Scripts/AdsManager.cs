@@ -15,8 +15,8 @@ public class AdsManager : MonoBehaviour
     // Real ad unit IDs (used only in non-development builds)
     const string ReleaseBannerId = "ca-app-pub-6735253086451753/6107480053";
     const string ReleaseInterstitialId = "ca-app-pub-6735253086451753/9084547472";
-    // TODO: create a "Rewarded" ad unit in AdMob and paste its ID here. Until then rewarded buttons are hidden in release builds.
-    const string ReleaseRewardedId = "";
+    // Rewarded ad unit: powers "Continue" and "x2 Coins".
+    const string ReleaseRewardedId = "ca-app-pub-6735253086451753/7812119329";
 
     const string TestBannerId = "ca-app-pub-3940256099942544/6300978111";
     const string TestInterstitialId = "ca-app-pub-3940256099942544/1033173712";

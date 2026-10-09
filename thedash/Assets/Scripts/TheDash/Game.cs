@@ -597,5 +597,33 @@ namespace TheDash
             Sfx.I.Play("reward");
             ui.Toast($"+{reward} COINS", UIColors.Gold, true);
         }
+
+        /// <summary>Watch a rewarded ad to get double the daily reward (normal reward if the ad fails).</summary>
+        public void ClaimDailyDoubled()
+        {
+            if (!SaveData.DailyAvailable || AdsManager.Instance == null) return;
+            AdsManager.Instance.ShowRewarded(ok =>
+            {
+                int reward = SaveData.ClaimDaily();
+                if (reward <= 0) return;
+                if (ok) SaveData.Coins += reward;
+                Sfx.I.Play("reward");
+                ui.Toast($"+{(ok ? reward * 2 : reward)} COINS", UIColors.Gold, true);
+            });
+        }
+
+        /// <summary>Watch a rewarded ad in the shop for free coins (every few hours).</summary>
+        public void FreeCoinsWithAd()
+        {
+            if (SaveData.FreeCoinsWait > System.TimeSpan.Zero || AdsManager.Instance == null) return;
+            AdsManager.Instance.ShowRewarded(ok =>
+            {
+                if (!ok) return;
+                SaveData.MarkFreeCoinsUsed();
+                SaveData.Coins += SaveData.FreeCoinsAmount;
+                Sfx.I.Play("reward");
+                ui.Toast($"+{SaveData.FreeCoinsAmount} FREE COINS", UIColors.Gold, true);
+            });
+        }
     }
 }

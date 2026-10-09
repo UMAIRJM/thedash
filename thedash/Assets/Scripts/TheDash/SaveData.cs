@@ -101,6 +101,28 @@ namespace TheDash
         // ---------- Daily reward ----------
         public static readonly int[] DailyRewards = { 25, 40, 60, 80, 100, 150, 300 };
 
+        // ---------- Free coins (watch an ad in the shop, every few hours) ----------
+        public const int FreeCoinsAmount = 50;
+        public static readonly TimeSpan FreeCoinsCooldown = TimeSpan.FromHours(3);
+        const string KFreeCoins = "td_free_coins_at";
+
+        /// <summary>Time left until the free-coins ad can be watched again (zero = ready).</summary>
+        public static TimeSpan FreeCoinsWait
+        {
+            get
+            {
+                if (!long.TryParse(PlayerPrefs.GetString(KFreeCoins, "0"), out long ticks)) return TimeSpan.Zero;
+                var left = new DateTime(ticks, DateTimeKind.Utc) + FreeCoinsCooldown - DateTime.UtcNow;
+                return left > TimeSpan.Zero && left <= FreeCoinsCooldown ? left : TimeSpan.Zero;
+            }
+        }
+
+        public static void MarkFreeCoinsUsed()
+        {
+            PlayerPrefs.SetString(KFreeCoins, DateTime.UtcNow.Ticks.ToString());
+            Save();
+        }
+
         static int Today => (int)(DateTime.Now.Date - new DateTime(2024, 1, 1)).TotalDays;
 
         public static bool DailyAvailable => PlayerPrefs.GetInt(KDailyDay, -1) != Today;

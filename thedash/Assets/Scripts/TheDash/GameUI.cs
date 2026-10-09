@@ -59,6 +59,8 @@ namespace TheDash
 
         // shop / missions / daily / settings
         Text shopCoins;
+        UIKit.ButtonRefs shopFree, dailyDouble;
+        float freeTimer;
         readonly List<Action> shopRefreshers = new List<Action>();
         readonly Text[] missionText = new Text[Missions.SlotCount], missionCount = new Text[Missions.SlotCount], missionReward = new Text[Missions.SlotCount];
         readonly Image[] missionFill = new Image[Missions.SlotCount];
@@ -574,6 +576,8 @@ namespace TheDash
             var c = CardContent(m);
             shopCoins = UIKit.Pill(c, Art.Coin, Color.white, "0", 280, out var pill);
             pill.At(0, 1, 30, -38, 280, 92);
+            shopFree = UIKit.Button(c, "+" + SaveData.FreeCoinsAmount + " FREE", "video", new Color(0.95f, 0.6f, 0.15f), 320, 92, () => game.FreeCoinsWithAd(), 40);
+            shopFree.rt.At(1, 1, -140, -38, 320, 92);
 
             var grid = UIKit.Node("Grid", c).At(0.5f, 0.5f, 0, -60, 1300, 660);
             for (int i = 0; i < Skin.All.Length; i++)
@@ -689,6 +693,8 @@ namespace TheDash
             }
             dailyClaim = UIKit.Button(c, "CLAIM", "gift", new Color(0.2f, 0.75f, 0.45f), 460, 130, () => game.ClaimDaily(), 60);
             dailyClaim.rt.At(0.5f, 0, 0, 50, 460, 130);
+            dailyDouble = UIKit.Button(c, "CLAIM x2", "video", new Color(0.95f, 0.6f, 0.15f), 420, 130, () => game.ClaimDailyDoubled(), 56);
+            dailyDouble.rt.At(0.5f, 0, 230, 50, 420, 130);
             dailyNote = UIKit.Label(c, "Come back tomorrow for more!", 44, UIColors.TextSoft);
             dailyNote.rectTransform.At(0.5f, 0, 0, 90, 1000, 60);
             return m;
@@ -758,14 +764,44 @@ namespace TheDash
             foreach (var r in dailyRefreshers) r();
             foreach (var r in settingsRefreshers) r();
             RefreshMissions();
+            bool adReady = AdsManager.Instance != null && AdsManager.Instance.RewardedReady;
             dailyClaim.rt.gameObject.SetActive(SaveData.DailyAvailable);
+            dailyDouble.rt.gameObject.SetActive(SaveData.DailyAvailable && adReady);
+            // with the x2 option available, put both buttons side by side
+            dailyClaim.rt.anchoredPosition = new Vector2(dailyDouble.rt.gameObject.activeSelf ? -230 : 0, 50);
             dailyNote.gameObject.SetActive(!SaveData.DailyAvailable);
+            RefreshFreeCoins();
             privacyButton.SetActive(AdsManager.Instance != null && AdsManager.Instance.PrivacyOptionsRequired);
+        }
+
+        /// <summary>Shop "free coins" button: shows a countdown while on cooldown, hidden if no ad is ready.</summary>
+        void RefreshFreeCoins()
+        {
+            var wait = SaveData.FreeCoinsWait;
+            bool adReady = AdsManager.Instance != null && AdsManager.Instance.RewardedReady;
+            shopFree.rt.gameObject.SetActive(adReady || wait > System.TimeSpan.Zero);
+            bool ready = wait <= System.TimeSpan.Zero;
+            shopFree.button.interactable = ready;
+            shopFree.label.text = ready ? "+" + SaveData.FreeCoinsAmount + " FREE" : $"{(int)wait.TotalHours}h {wait.Minutes:00}m";
+            shopFree.icon.gameObject.SetActive(ready);
+            shopFree.bg.color = ready ? new Color(0.95f, 0.6f, 0.15f) : new Color(0.35f, 0.3f, 0.45f);
+            shopFree.rt.Find("Lip").GetComponent<Image>().color = Color.Lerp(shopFree.bg.color, Color.black, 0.45f);
         }
 
         void Update()
         {
             if (Screen.safeArea != lastSafe) ApplySafeArea();
+
+            // keep the shop countdown and ad-dependent buttons fresh while a menu is open
+            freeTimer -= Time.unscaledDeltaTime;
+            if (freeTimer <= 0f && open.Count > 0)
+            {
+                freeTimer = 1f;
+                RefreshFreeCoins();
+                bool adReady = AdsManager.Instance != null && AdsManager.Instance.RewardedReady;
+                dailyDouble.rt.gameObject.SetActive(SaveData.DailyAvailable && adReady);
+                dailyClaim.rt.anchoredPosition = new Vector2(dailyDouble.rt.gameObject.activeSelf ? -230 : 0, 50);
+            }
 
             if (menu.activeSelf && tapToPlay != null)
             {
