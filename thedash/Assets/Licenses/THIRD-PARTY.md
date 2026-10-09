@@ -3,7 +3,7 @@
 | Asset | Source | License |
 |---|---|---|
 | Lilita One font (`Assets/Resources/Fonts/LilitaOne.ttf`) | Google Fonts, by Juan Montoreano | SIL Open Font License 1.1 (see `LilitaOne-OFL.txt`) |
-| Background music (`Assets/Resources/Audio/music.mp3`, "Database Dash") | Pixabay (to be confirmed by the developer) | Pixabay Content License: free for commercial use, no attribution required |
+| Background music (`Assets/Resources/Audio/music.mp3`, "Database Dash") | Pixabay (pixabay.com) | Pixabay Content License: free for commercial use, no attribution required |
 | Google Mobile Ads Unity plugin (`Assets/GoogleMobileAds`) | Google | Apache License 2.0 |
 | External Dependency Manager (`Assets/ExternalDependencyManager`) | Google | Apache License 2.0 |
 
